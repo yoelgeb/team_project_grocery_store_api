@@ -1,13 +1,8 @@
 {% extends "base.html" %} {% block title %} Home {% endblock %}
 
 {% block content %}
+<div class="container">
 <h1> Product Page</h1>
-
-<div class="btn-group" role="group" aria-label="Basic example">
-  <button type="button" id ="buy" class="btn btn-secondary">Buy</button>
-  <button type="button" id ="review" class="btn btn-secondary">Review</button>
-  <button type="button" id ="logout" class="btn btn-secondary">Quit</button>
-</div>
 
 <table>
   <thead>
@@ -20,32 +15,16 @@
   <tbody>
   {% for value in result %}
    <tr>
-      
-       <td> {{ value["name"] }} </td>
+    
+       <td> {{ value["name"] }} </td> 
        <td> {{ value["quantity"] }} </td>
        <td> {{ value["price"] }} </td>
    </tr>
   {% endfor %}
   </tbody>
 </table>
+<br />
+<input class="btn btn-primary" type="submit" value="Submit">
+</div>
 
-
-<!-- <table>
-    <tr>
-      <th>Product</th>
-      <th>Price</th>
-      <th>Quantity</th>
-      <th>Quantity</th>
-    </tr>
-    <tr>
-      <td>Apple</td>
-      <td>10.0</td>
-      <td>10</td>
-    </tr>
-    <tr>
-      <td>Banana</td>
-      <td>10.0</td>
-      <td>10</td>
-    </tr>
-  </table>  -->
 {%endblock%}
