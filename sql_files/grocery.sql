@@ -35,7 +35,6 @@ create table customers
 	email VARCHAR (50) NOT NULL,
 	first_name VARCHAR (50) NOT NULL,
 	customer_pass VARCHAR (50) NOT NULL,
-    product_review_id int,
     
     foreign key (product_review_id) references Product_reviews(product_review_id)
 );
