@@ -34,8 +34,19 @@ create table customers
 	customer_id int primary key auto_increment,
 	email VARCHAR (50) NOT NULL,
 	first_name VARCHAR (50) NOT NULL,
-	password VARCHAR (50) NOT NULL,
+	customer_pass VARCHAR (50) NOT NULL,
     product_review_id int,
     
     foreign key (product_review_id) references Product_reviews(product_review_id)
 );
+
+create table customer_product_review
+(
+	customer_id int,
+    product_review_id int,
+    primary key(customer_id, product_review_id),
+    foreign key (customer_id) references Customers(customer_id),
+    foreign key (product_review_id) references Product_reviews(product_review_id)
+);
+
+
