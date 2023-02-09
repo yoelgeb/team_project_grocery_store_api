@@ -1,7 +1,9 @@
 from flask import Flask
 def create_app():
     app = Flask(__name__)
-    app.config["Secret_Key"] = "dfsdfsdgggfgfg"
+    app.config['SESSION_TYPE'] = 'memcached'
+    app.config['SECRET_KEY'] = 'super secret key'
+    #sess = Session()
 
     from .views import views
     from .auth import auth
