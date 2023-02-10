@@ -11,6 +11,8 @@ db_cursor = my_connection.cursor()
 
 
 def get_products(category):
+    if (not isinstance(category, str)):
+        raise ValueError("Category is not a string")
     dict_list = []
     stmt = f'''Select product_name, product_quantity, product_price, category_name
                     from products
@@ -39,6 +41,12 @@ def get_product_categories():
     return cat_list
 
 def buy_product(email, product_name, quantity_taken):
+    if (not isinstance(email, str)):
+        raise ValueError("Email is not a string")
+    if (not isinstance(product_name, str)):
+        raise ValueError("Product Name is not a string")
+    if (not isinstance(quantity_taken, int)):
+        raise ValueError("Quantity is not a number")
     stmt = f'''
     INSERT INTO customer_products(customer_id, product_id)
     VALUES ((Select customer_id from Customers where email = "{email}"), 
@@ -49,6 +57,12 @@ def buy_product(email, product_name, quantity_taken):
     update_quantity(quantity_taken, product_name)
 
 def create_user(email, first_name, password):
+    if (not isinstance(email, str)):
+        raise ValueError("Email is not a string")
+    if (not isinstance(first_name, str)):
+        raise ValueError("First_name is not a string")
+    if (not isinstance(password, str)):
+        raise ValueError("Password is not a string")
     stmt = f'''
     INSERT into customers(email, first_name, customer_pass)
         values("{email}", "{first_name}", "{password}")
@@ -57,6 +71,8 @@ def create_user(email, first_name, password):
     my_connection.commit()
 
 def view_owned_products(email):
+    if (not isinstance(email, str)):
+        raise ValueError("Email is not a string")
     own_list = []
     stmt = f'''
         SELECT DISTINCT product_name 
@@ -71,6 +87,12 @@ def view_owned_products(email):
     return own_list
 
 def create_user_review(email, product, star_num):
+    if (not isinstance(email, str)):
+        raise ValueError("Email is not a string")
+    if (not isinstance(product, str)):
+        raise ValueError("Product is not a string")
+    if (not isinstance(star_num, int)):
+        raise ValueError("Star Rating is not a number")
     stmt = f'''
     INSERT INTO Product_reviews(num_stars, product_id)
         Values ({star_num}, (Select product_id from products where product_name = '{product}')); '''
@@ -84,6 +106,10 @@ def create_user_review(email, product, star_num):
     my_connection.commit()
 
 def update_quantity(amount_taken, product):
+    if (not isinstance(amount_taken, int)):
+        raise ValueError("The Amount Taken is not a int")
+    if (not isinstance(product, int)):
+        raise ValueError("Product is not a string")
     stmt = f'''Select Product_quantity from Products WHERE product_name = "{product}";'''
     db_cursor.execute(stmt)
     current = db_cursor.fetchall()[0][0]
@@ -101,6 +127,8 @@ def update_quantity(amount_taken, product):
 # [0] = Product Name
 # [1] = Category Name / Price
 def get_all_products(order_by='category'):
+    if (not isinstance(order_by, str)):
+        raise ValueError("Order By is not a string")
     product_list = []
     if (order_by == 'category'):
         stmt = f'''
@@ -141,6 +169,8 @@ def get_reviews_by_pop():
     return result_set
 
 def delete_user(email):
+    if (not isinstance(email, str)):
+        raise ValueError("Email is not a string")
     stmt = f'''
     DELETE FROM customers
     WHERE email = '{email}';
@@ -150,6 +180,14 @@ def delete_user(email):
 
 # Valid categories: Fruits, Vegetables, Snacks, Grains, Meat, Dairy
 def add_fruit(product_name, quantity, price, category):
+    if (not isinstance(product_name, str)):
+        raise ValueError("Product Name is not a string")
+    if (not isinstance(quantity, int)):
+        raise ValueError("Quantity is not an int")
+    if (not isinstance(price, float)):
+        raise ValueError("Price is not a float")
+    if (not isinstance(category, str)):
+        raise ValueError("Category is not a string")
     stmt = f'''
     INSERT INTO Products(product_name, product_quantity, product_price, category_id)
     Values ("{product_name}", {quantity}, {price}, (Select category_id from Product_categories where category_name = "{category}"));
@@ -158,4 +196,5 @@ def add_fruit(product_name, quantity, price, category):
     my_connection.commit()
 
 
-print(add_fruit("Cream", 40, 4.99, "Dairy"))
+if (__name__ == "__main__"):
+    print("Hello")
