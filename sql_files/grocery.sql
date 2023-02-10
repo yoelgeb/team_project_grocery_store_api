@@ -18,6 +18,7 @@ create table Products
     category_id int,
     
     foreign key (category_id) references Product_categories(category_id)
+    ON DELETE CASCADE
 );
 
 create table Product_reviews
@@ -27,6 +28,7 @@ create table Product_reviews
     product_id int,
     
     foreign key (product_id) references Products(product_id)
+    ON DELETE CASCADE
 );
 
 create table customers
@@ -42,8 +44,10 @@ create table customer_product_review
 	customer_id int,
     product_review_id int,
     primary key(customer_id, product_review_id),
-    foreign key (customer_id) references Customers(customer_id),
+    foreign key (customer_id) references Customers(customer_id)
+    ON DELETE CASCADE,
     foreign key (product_review_id) references Product_reviews(product_review_id)
+    ON DELETE CASCADE
 );
 
 create table customer_products
@@ -51,8 +55,10 @@ create table customer_products
 	customer_id int,
     product_id int,
     primary key(customer_id, product_id),
-    foreign key (customer_id) references Customers(customer_id),
+    foreign key (customer_id) references Customers(customer_id)
+    ON DELETE CASCADE,
     foreign key (product_id) references Products(product_id)
+    ON DELETE CASCADE
 );
 
 

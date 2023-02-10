@@ -38,14 +38,15 @@ def get_product_categories():
         cat_list.append(row)
     return cat_list
 
-def buy_product(email, product_name):
+def buy_product(email, product_name, quantity_taken):
     stmt = f'''
     INSERT INTO customer_products(customer_id, product_id)
     VALUES ((Select customer_id from Customers where email = "{email}"), 
-		Select product_id from Products where product_name = "{product_name}"))
+		(Select product_id from Products where product_name = "{product_name}"))
     '''
     db_cursor.execute(stmt)
     my_connection.commit()
+    update_quantity(quantity_taken, product_name)
 
 def create_user(email, first_name, password):
     stmt = f'''
@@ -70,21 +71,91 @@ def view_owned_products(email):
     return own_list
 
 def create_user_review(email, product, star_num):
-    pass
+    stmt = f'''
+    INSERT INTO Product_reviews(num_stars, product_id)
+        Values ({star_num}, (Select product_id from products where product_name = '{product}')); '''
+    db_cursor.execute(stmt)
 
-def update_quantity():
-    pass
+    stmt = f'''
+    INSERT INTO customer_product_review(customer_id, product_review_id)
+        values((Select customer_id from Customers where email = "{email}"), (SELECT last_insert_id())); '''
+    
+    db_cursor.execute(stmt)
+    my_connection.commit()
 
-def delete_user():
-    pass
+def update_quantity(amount_taken, product):
+    stmt = f'''Select Product_quantity from Products WHERE product_name = "{product}";'''
+    db_cursor.execute(stmt)
+    current = db_cursor.fetchall()[0][0]
+    if (current < amount_taken):
+        raise ValueError("Taking more than currently available")
+    
+    stmt = f'''
+    UPDATE products
+    SET product_quantity = product_quantity - {amount_taken}
+    WHERE product_name = "{product}";
+    '''
+    db_cursor.execute(stmt)
+    my_connection.commit()
 
-def get_product_by_price():
-    pass
+# [0] = Product Name
+# [1] = Category Name / Price
+def get_all_products(order_by='category'):
+    product_list = []
+    if (order_by == 'category'):
+        stmt = f'''
+        SELECT product_name, category_name
+        from products
+        JOIN product_categories
+            ON products.category_id = product_categories.category_id
+        ORDER BY category_name;
+        '''
+    elif (order_by == 'price'):
+        stmt = f'''
+        SELECT product_name, product_price
+        FROM products
+        ORDER BY product_price DESC;
+        '''
 
-def get_review_by_pop():
-    pass
+    db_cursor.execute(stmt)
+    result_set = db_cursor.fetchall()
+    for row in result_set:
+        product_list.append(row)
+    return result_set
 
-def get_all_products():
-    pass
+#Star ratings = pop
+def get_reviews_by_pop():
+    pop_list = []
+    stmt = f'''
+    SELECT first_name, num_stars, product_name 
+    FROM product_reviews
+	    JOIN products on products.product_id = product_reviews.product_id
+	    JOIN customer_product_review on customer_product_review.product_review_id = product_reviews.product_review_id
+	    JOIN customers on customers.customer_id = customer_product_review.customer_id
+    Order by num_stars;
+    '''
+    db_cursor.execute(stmt)
+    result_set = db_cursor.fetchall()
+    for row in result_set:
+        pop_list.append(row)
+    return result_set
 
-print(view_owned_products("yoel@gmail.com"))
+def delete_user(email):
+    stmt = f'''
+    DELETE FROM customers
+    WHERE email = '{email}';
+    '''
+    db_cursor.execute(stmt)
+    my_connection.commit()
+
+# Valid categories: Fruits, Vegetables, Snacks, Grains, Meat, Dairy
+def add_fruit(product_name, quantity, price, category):
+    stmt = f'''
+    INSERT INTO Products(product_name, product_quantity, product_price, category_id)
+    Values ("{product_name}", {quantity}, {price}, (Select category_id from Product_categories where category_name = "{category}"));
+    '''
+    db_cursor.execute(stmt)
+    my_connection.commit()
+
+
+print(add_fruit("Cream", 40, 4.99, "Dairy"))
