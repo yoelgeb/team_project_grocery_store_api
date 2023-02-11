@@ -29,3 +29,41 @@ def get_products(category):
     return dict_list
 
 # print(get_products("Fruits"))
+
+def y(text):
+    return text
+
+def max_price():
+    dict_list = []
+    query = f"""SELECT product_name, MAX(product_price) as Max_Price
+    FROM products
+    GROUP BY product_name
+    ORDER BY Max_Price DESC"""
+    db_cursor.execute(query)
+    result = db_cursor.fetchall()
+    for row in result: 
+        row_dict = {
+            "product_name" : row[0],
+            "Max_price" : row[1]
+        }
+        dict_list.append(row_dict)
+    return dict_list
+
+def product_category():
+    dict_list=[]
+    query="""SELECT  product_name, category_name
+    from products
+    JOIN product_categories
+    ON products.category_id = product_categories.category_id
+    ORDER BY category_name"""
+    db_cursor.execute(query)
+    result = db_cursor.fetchall()
+    for row in result: 
+        row_dict = {
+            "product_name" : row[0],
+            "category_name" : row[1]
+        }
+        dict_list.append(row_dict)
+    return dict_list
+
+

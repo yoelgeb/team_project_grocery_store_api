@@ -32,10 +32,28 @@ create table Product_reviews
 create table customers
 (
 	customer_id int primary key auto_increment,
-	email VARCHAR (50) NOT NULL,
+	email VARCHAR (50) NOT NULL UNIQUE,
 	first_name VARCHAR (50) NOT NULL,
-	password VARCHAR (50) NOT NULL,
+	customer_pass VARCHAR (50) NOT NULL
+);
+
+create table customer_product_review
+(
+	customer_id int,
     product_review_id int,
-    
+    primary key(customer_id, product_review_id),
+    foreign key (customer_id) references Customers(customer_id),
     foreign key (product_review_id) references Product_reviews(product_review_id)
 );
+
+create table customer_products
+(
+	customer_id int,
+    product_id int,
+    primary key(customer_id, product_id),
+    foreign key (customer_id) references Customers(customer_id),
+    foreign key (product_id) references Products(product_id)
+);
+select * from customers;
+insert into customers(email,first_name,password) values ("Rahman@gmail.com","rahman", "abcd");
+insert into customers(email,first_name,password) values ("Rahdfman@gmail.com","rahman", "abdsfdfcd");
