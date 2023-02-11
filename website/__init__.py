@@ -23,7 +23,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(currentUser):
-        return db_cursor.execute(""""Select customer_id from customers """)
+        return db_cursor.execute(""""Select email from customers """)
          
 
     app.register_blueprint(views, url_prefix="/")

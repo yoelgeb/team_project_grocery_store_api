@@ -13,7 +13,7 @@ out = [item for t in user for item in t]
 print(out)
 
 
-db_cursor.execute("""select password from customers""")
+db_cursor.execute("""select customer_pass from customers""")
 password = db_cursor.fetchall()
 passwordd = [item for t in password for item in t]      
 print(passwordd)
