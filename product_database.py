@@ -129,6 +129,8 @@ def update_quantity(amount_taken, product):
 def get_all_products(order_by='category'):
     if (not isinstance(order_by, str)):
         raise ValueError("Order By is not a string")
+    if (order_by is not 'category' or order_by is not 'price'):
+        raise Exception("You can only order by category (default param) or price")
     product_list = []
     if (order_by == 'category'):
         stmt = f'''
@@ -144,7 +146,6 @@ def get_all_products(order_by='category'):
         FROM products
         ORDER BY product_price DESC;
         '''
-
     db_cursor.execute(stmt)
     result_set = db_cursor.fetchall()
     for row in result_set:
@@ -197,4 +198,4 @@ def add_fruit(product_name, quantity, price, category):
 
 
 if (__name__ == "__main__"):
-    print("Hello")
+    print(get_all_products("Testing"))
